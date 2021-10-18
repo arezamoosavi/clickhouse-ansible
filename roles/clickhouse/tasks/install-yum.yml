@@ -1,0 +1,37 @@
+---
+- name: Ensure clickhouse group
+  group:
+    name: "{{ clickhouse_group }}"
+    system: yes
+    state: present
+
+- name: Ensure clickhouse user
+  user:
+    name: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+    system: yes
+    shell: /usr/sbin/nologin
+    createhome: no
+
+- name: Ensure clickhouse yum repo GPG key imported
+  rpm_key:
+    state: present
+    key: "{{ clickhouse_yum_repo_key }}"
+
+- name: Ensure clickhouse yum repo installed
+  yum_repository:
+    name: clickhouse
+    file: clickhouse
+    description: "Clickhouse repo"
+    baseurl: "{{ clickhouse_yum_repo }}"
+    enabled: yes
+    gpgcheck: 1
+    gpgkey: "{{ clickhouse_yum_repo_key }}"
+
+- name: Ensure clickhouse yum package installed
+  yum:
+    name: "{{ clickhouse_yum_package }}"
+    state: present
+    allow_downgrade: "{{ clickhouse_allow_downgrade }}" # for rollback purposes
+  notify:
+    - restart-ch

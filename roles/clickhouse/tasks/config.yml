@@ -1,0 +1,69 @@
+---
+- name: Ensure clickhouse path config
+  file:
+    dest: "{{ item }}"
+    owner: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+    mode: 0755
+    state: directory
+  with_items:
+    - "{{ clickhouse_path_config }}"
+    - "{{ clickhouse_path_config_d }}"
+    - "{{ clickhouse_path_log }}"
+  notify: restart-ch
+
+- name: Config system
+  template:
+    src: custom-config.xml.j2
+    dest: "{{ clickhouse_path_config_d }}/custom-config.xml"
+    owner: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+    mode: 0644
+  notify: restart-ch
+
+# user conf does not force to restart :)
+- name: Config users
+  template:
+    src: users.xml.j2
+    dest: /etc/clickhouse-server/users.d/users.xml
+    owner: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+    mode: 0644
+  no_log: true
+
+- name: Config remote_servers
+  template:
+    src: remote-servers.xml.j2
+    dest: "{{ clickhouse_path_config_d }}/remote-servers.xml"
+    owner: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+    mode: 0644
+  notify: restart-ch
+
+- name: Config macros
+  template:
+    src: macros.xml.j2
+    dest: "{{ clickhouse_path_config_d }}/macros.xml"
+    owner: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+    mode: 0644
+  notify: restart-ch
+
+- name: Config compression
+  template:
+    src: compression.xml.j2
+    dest: "{{ clickhouse_path_config_d }}/compression.xml"
+    owner: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+    mode: 0644
+  notify: restart-ch
+
+- name: Config zookeeper
+  template:
+    src: zookeeper-servers.xml.j2
+    dest: "{{ clickhouse_path_config_d }}/zookeeper-servers.xml"
+    owner: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+    mode: 0644
+  notify: restart-ch
+  when: groups['zookeeper'] is defined and (groups['zookeeper'] | length > 0)

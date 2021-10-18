@@ -1,0 +1,6 @@
+---
+- name: restart-ch
+  service:
+    name: "{{ clickhouse_service_name }}"
+    state: restarted
+    enabled: yes

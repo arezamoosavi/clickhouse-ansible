@@ -1,0 +1,98 @@
+---
+dependency:
+  name: galaxy
+  options:
+    ignore-certs: True
+    ignore-errors: True
+    role-file: molecule/default/requirements.yml
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  # it is the inventory hostname. Must be resolved in internal network. See prepare.yml
+  - name: zookeeper01.local
+    box: centos/7
+    memory: 2048
+    cpus: 1
+    hostname: zookeeper01
+    interfaces:
+      - network_name: private_network
+        ip: 192.168.69.60
+        virtualbox__intnet: true
+        hostname: true
+    groups:
+      - zookeeper
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+  - name: ch01-shard01-replica01.local
+    box: centos/7
+    memory: 2048
+    cpus: 1
+    hostname: ch01-shard01-replica01
+    interfaces:
+      - network_name: private_network
+        ip: 192.168.69.69
+        virtualbox__intnet: true
+        hostname: true
+    groups:
+      - clickhouse
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+  - name: ch01-shard01-replica02.local
+    box: centos/8
+    memory: 2048
+    cpus: 1
+    hostname: ch01-shard01-replica02
+    interfaces:
+      - network_name: private_network
+        ip: 192.168.69.70
+        virtualbox__intnet: true
+        hostname: true
+    groups:
+      - clickhouse
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+  - name: ch01-shard02-replica01.local
+    box: ubuntu/focal64
+    memory: 2048
+    cpus: 1
+    hostname: ch01-shard02-replica01
+    interfaces:
+      - network_name: private_network
+        ip: 192.168.69.72
+        virtualbox__intnet: true
+        hostname: true
+    groups:
+      - clickhouse
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+  - name: ch01-shard02-replica02.local
+    box: ubuntu/bionic64
+    memory: 2048
+    cpus: 1
+    hostname: ch01-shard02-replica02
+    interfaces:
+      - network_name: private_network
+        ip: 192.168.69.73
+        virtualbox__intnet: true
+        hostname: true
+    groups:
+      - clickhouse
+    config_options:
+      ssh.keep_alive: yes
+      ssh.remote_user: "'vagrant'"
+provisioner:
+  name: ansible
+  connection_options:
+    ansible_ssh_user: vagrant
+    ansible_become: true
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint

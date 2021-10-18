@@ -1,0 +1,23 @@
+---
+
+- name: Converge Zookeeper
+  hosts: zookeeper
+  tasks:
+    - name: "Include java role for zookeeper"
+      include_role:
+        name: "java"
+
+    - name: "Include ansible-role-zookeeper"
+      include_role:
+        name: "zookeeper"
+      vars:
+        zookeeper_servers: "{{ groups['zookeeper'] }}"
+        # assuming zookeeper regex hostname is 'zookeeper\d{2}'
+        zookeeper_id: "{{ ansible_hostname | regex_search('^zookeeper(\\d{2})', '\\1') | first }}"
+
+- name: Converge Clickhouse
+  hosts: clickhouse
+  tasks:
+    - name: "Include ansible-role-clickhouse"
+      include_role:
+        name: "ansible-role-clickhouse"

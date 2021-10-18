@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- {{ ansible_managed }} -->
+<yandex>
+    <macros>
+        <cluster>{{ clickhouse_cluster_name | default('mycluster') }}</cluster>
+        <shard>{{ clickhouse_shard_name }}</shard>
+        <replica>{{ clickhouse_replica_name }}</replica>
+    </macros>
+</yandex>

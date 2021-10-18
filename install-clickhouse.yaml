@@ -1,0 +1,14 @@
+---
+- name: Zookeeper Setup
+  hosts: zookeeper
+  remote_user: root
+  roles:
+    - common
+    - zookeeper
+
+- name: Clickhouse Setup
+  hosts: clickhouse
+  remote_user: root
+  roles:
+    - common
+    - clickhouse
