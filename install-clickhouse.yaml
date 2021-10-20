@@ -2,6 +2,8 @@
 - name: Zookeeper Setup
   hosts: zookeeper
   remote_user: root
+  var_files:
+    - group_vars/zookeeper
   roles:
     - common
     - zookeeper
@@ -9,6 +11,8 @@
 - name: Clickhouse Setup
   hosts: clickhouse
   remote_user: root
+  var_files:
+    - group_vars/clickhouse
   roles:
     - common
     - clickhouse
