@@ -2,13 +2,7 @@
 - name: COMMON | Install basic packages
   package: name={{ item }} state=present
   with_items:
-    - python
     - wget
     - vim
     - nano
     - curl
-
-- name: Fancy way of doing authorized_keys
-  authorized_key: user=root
-                  exclusive=no
-                  key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

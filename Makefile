@@ -7,3 +7,6 @@ check-servers:
 	ansible all -a "df -h" -u root -i hosts
 	sleep 2
 	ansible all -a "free -h" -u root -i hosts
+
+pre-install:
+	ansible-playbook prepare_ansible_hosts.yml -i hosts
