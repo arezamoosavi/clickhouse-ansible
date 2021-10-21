@@ -62,7 +62,24 @@
     <mlock_executable>{{ clickhouse_config.mlock_status }}</mlock_executable>
 
     <!-- Replication parameters -->
-    <remote_servers incl="clickhouse_remote_servers" />
+    <remote_servers>
+    {% for clusters_name, shards_name in clickhouse_clusters.items() | list %}
+    <{{ clusters_name }}>
+    {% for shard_name, replicas in shards_name.items() %}
+        <shard>
+            <internal_replication>true</internal_replication>
+        {% for replica in replicas %}
+            <replica>
+                <host>{{ replica['host'] }}</host>
+                <port>{{ clickhouse_tcp_port }}</port>
+            </replica>
+        {% endfor %}
+        </shard>
+    {% endfor %}
+    </{{ clusters_name }}>
+    {% endfor %}
+    </remote_servers>
+
     <remote_url_allow_hosts>
         <!-- Host should be specified exactly as in URL. The name is checked before DNS resolution.
             Example: "yandex.ru", "yandex.ru." and "www.yandex.ru" are different hosts.
@@ -79,7 +96,14 @@
         -->
     </remote_url_allow_hosts>
 
-    <zookeeper incl="zookeeper-servers" optional="true" />
+    <zookeeper>
+        {% for host in clickhouse_zookeeper_list %}
+        <node index="{{ loop.index }}">
+            <host>{{ host }}</host>
+            <port>{{ clickhouse_zookeeper_port }}</port>
+        </node>
+        {% endfor %}
+    </zookeeper>
     <macros incl="macros" optional="true" />
     
     <!-- Reloading interval for embedded dictionaries, in seconds. Default: 3600. -->

@@ -15,7 +15,7 @@
 - name: Config system
   template:
     src: config.xml.j2
-    dest: "{{ clickhouse_path_config }}/config.xml"
+    dest: "{{ clickhouse_path_config_d }}/config.xml"
     owner: "{{ clickhouse_user }}"
     group: "{{ clickhouse_group }}"
     mode: 0644
@@ -25,7 +25,7 @@
 - name: Config users
   template:
     src: users.xml.j2
-    dest: "{{ clickhouse_path_config }}/users.xml"
+    dest: "{{ clickhouse_path_config_d }}/users.xml"
     owner: "{{ clickhouse_user }}"
     group: "{{ clickhouse_group }}"
     mode: 0644
@@ -43,7 +43,7 @@
 - name: Config compression
   template:
     src: metrika.xml.j2
-    dest: "{{ clickhouse_path_config }}/metrika.xml"
+    dest: "{{ clickhouse_path_config_d }}/metrika.xml"
     owner: "{{ clickhouse_user }}"
     group: "{{ clickhouse_group }}"
     mode: 0644

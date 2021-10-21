@@ -1,7 +1,7 @@
 [clickhouse]
-10.0.3.105 ansible_host=10.0.3.105 ch_shard=shard01 ch_cluster=cluster-01
-10.0.3.165 ansible_host=10.0.3.165 ch_shard=shard01 ch_cluster=cluster-01
-10.0.3.75 ansible_host=10.0.3.75 ch_shard=shard02 ch_cluster=cluster-01
+10.0.3.105 ansible_host=10.0.3.105 ch_shard=shard01 ch_cluster=cluster01
+10.0.3.165 ansible_host=10.0.3.165 ch_shard=shard01 ch_cluster=cluster01
+10.0.3.75 ansible_host=10.0.3.75 ch_shard=shard01 ch_cluster=cluster01
 
 [zookeeper]
 10.0.3.59 ansible_host=10.0.3.59

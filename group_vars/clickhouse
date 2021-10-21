@@ -127,9 +127,8 @@ clickhouse_logger:
 
 # cluster config
 clickhouse_clusters:
-    cluster-01:
+    cluster01:
       shard01:
         - { host: "10.0.3.105",}
         - { host: "10.0.3.165",}
-      shard02:
         - { host: "10.0.3.75",}

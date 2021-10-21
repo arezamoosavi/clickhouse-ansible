@@ -1,49 +1,29 @@
 <yandex>
-    <clickhouse_remote_servers>
-        {% for clusters_name, shards_name in clickhouse_clusters.items() | list %}
-        <{{ clusters_name }}>
-            {% for shard_name, replicas in shards_name.items() %}
-            <shard>
-                <internal_replication>true</internal_replication>
-                {% for replica in replicas %}
-                <replica>
-                    <host>{{ replica['host'] }}</host>
-                    <port>{{ clickhouse_tcp_port }}</port>
-                </replica>
-                {% endfor %}
-            </shard>
-            {% endfor %}
-        </{{ clusters_name }}>
-        {% endfor %}
-    </clickhouse_remote_servers>
-
-    <!-- second way: -->
-    <!-- <clickhouse_remote_servers>
-        <{{ clickhouse_cluster_name }}>
-    {% for shard in clickhouse_shard_list %}
+    <remote_servers>
+    {% for clusters_name, shards_name in clickhouse_clusters.items() | list %}
+    <{{ clusters_name }}>
+    {% for shard_name, replicas in shards_name.items() %}
         <shard>
             <internal_replication>true</internal_replication>
-    {% for replica in clickhouse_replica_list %}
-    {% if shard in hostvars[replica].ansible_hostname  %}
+        {% for replica in replicas %}
             <replica>
-            <host>{{ replica }}</host>
-            <port>{{ clickhouse_tcp_port }}</port>
+                <host>{{ replica['host'] }}</host>
+                <port>{{ clickhouse_tcp_port }}</port>
             </replica>
-    {% endif %}
-    {% endfor %}
+        {% endfor %}
         </shard>
     {% endfor %}
-        </{{ clickhouse_cluster_name }}>
-    </clickhouse_remote_servers> -->
-
-    <zookeeper-servers>
+    </{{ clusters_name }}>
+    {% endfor %}
+    </remote_servers>
+    <zookeeper>
         {% for host in clickhouse_zookeeper_list %}
         <node index="{{ loop.index }}">
             <host>{{ host }}</host>
             <port>{{ clickhouse_zookeeper_port }}</port>
         </node>
         {% endfor %}
-    </zookeeper-servers>
+    </zookeeper>
     <networks>
         <ip>::/0</ip>
     </networks>
