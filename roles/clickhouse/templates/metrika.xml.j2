@@ -1,0 +1,57 @@
+<yandex>
+    <clickhouse_remote_servers>
+        {% for clusters_name, shards_name in clickhouse_clusters.items() | list %}
+        <{{ clusters_name }}>
+            {% for shard_name, replicas in shards_name.items() %}
+            <shard>
+                <internal_replication>true</internal_replication>
+                {% for replica in replicas %}
+                <replica>
+                    <host>{{ replica['host'] }}</host>
+                    <port>{{ clickhouse_tcp_port }}</port>
+                </replica>
+                {% endfor %}
+            </shard>
+            {% endfor %}
+        </{{ clusters_name }}>
+        {% endfor %}
+    </clickhouse_remote_servers>
+
+    <!-- second way: -->
+    <!-- <clickhouse_remote_servers>
+        <{{ clickhouse_cluster_name }}>
+    {% for shard in clickhouse_shard_list %}
+        <shard>
+            <internal_replication>true</internal_replication>
+    {% for replica in clickhouse_replica_list %}
+    {% if shard in hostvars[replica].ansible_hostname  %}
+            <replica>
+            <host>{{ replica }}</host>
+            <port>{{ clickhouse_tcp_port }}</port>
+            </replica>
+    {% endif %}
+    {% endfor %}
+        </shard>
+    {% endfor %}
+        </{{ clickhouse_cluster_name }}>
+    </clickhouse_remote_servers> -->
+
+    <zookeeper-servers>
+        {% for host in clickhouse_zookeeper_list %}
+        <node index="{{ loop.index }}">
+            <host>{{ host }}</host>
+            <port>{{ clickhouse_zookeeper_port }}</port>
+        </node>
+        {% endfor %}
+    </zookeeper-servers>
+    <networks>
+        <ip>::/0</ip>
+    </networks>
+    <clickhouse_compression>
+        <case>
+            <min_part_size>10000000000</min_part_size>
+            <min_part_size_ratio>0.01</min_part_size_ratio>
+            <method>lz4</method>
+        </case>
+    </clickhouse_compression>
+</yandex>

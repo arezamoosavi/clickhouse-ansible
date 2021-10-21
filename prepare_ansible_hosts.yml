@@ -6,11 +6,32 @@
   become: yes
   become_user: root
   become_method: sudo
-  serial: 3
+  # serial: 4
 
   tasks:
+    - name: Print host info1
+      debug: msg="host is {{ ansible_host }} shard {{ ch_shard }} cluster {{ch_cluster}}"
+
+    - name: Print Ip
+      raw: ip addr show eth0 | awk '/inet/ {print $2}' | cut -d/ -f1 | head -n 1
+      register: ip_address
+    - debug: msg="host ip is {{ ip_address.stdout[:-2] }}"
+    
     - name: Install Python 3
       raw: test -e /usr/bin/python || (yum update && yum install -y python3)
+    
+    - name: Check Python3
+      raw: python3 --version
+      register: py3_chec
+    - debug: msg="{{ py3_chec.stdout }}"
+    
+    - name: Install JAVA 8
+      raw: yum update && yum install -y java-1.8.0-openjdk-devel
+    
+    - name: Check Java
+      raw: java -version
+      register: java_chec
+    - debug: msg="{{ java_chec.stdout }}"
 
     - name: Fancy way of doing authorized_keys
       authorized_key: user=root

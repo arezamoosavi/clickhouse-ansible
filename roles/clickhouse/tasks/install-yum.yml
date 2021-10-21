@@ -35,3 +35,37 @@
     allow_downgrade: "{{ clickhouse_allow_downgrade }}" # for rollback purposes
   notify:
     - restart-ch
+
+
+# CH can do its own logrotation, but I think this is responsability of logrotate, no CH.
+- name: Install | Logrotate CH logs
+  template:
+    src: clickhouse.logrotate.j2
+    dest: "/etc/logrotate.d/clickhouse"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Create non sensitive ClickHouse directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+  loop:
+    - "{{ clickhouse_path_config }}"
+
+- name: Create sensitive ClickHouse directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0750"
+    owner: "{{ clickhouse_user }}"
+    group: "{{ clickhouse_group }}"
+  loop:
+    - "{{ clickhouse_path }}"
+    - "{{ clickhouse_user_files_path }}"
+    - "{{ clickhouse_access_control_path }}"
+    - "{{ clickhouse_tmp_path }}"
+    - "{{ clickhouse_log_directory }}"

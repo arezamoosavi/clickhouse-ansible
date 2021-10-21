@@ -1,6 +1,7 @@
 ---
 - name: Zookeeper Setup
   hosts: zookeeper
+  gather_facts: True
   remote_user: root
   roles:
     - common
@@ -8,6 +9,7 @@
 
 - name: Clickhouse Setup
   hosts: clickhouse
+  gather_facts: True
   remote_user: root
   roles:
     - common

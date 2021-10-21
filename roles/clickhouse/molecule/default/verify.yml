@@ -1,8 +1,8 @@
 ---
 - name: Verify
   hosts: clickhouse
-  gather_facts: false
-  become: true
+  gather_facts: True
+  become: True
   vars:
     ch_local_verify_database: "local_db"
     ch_distributed_verify_database: "distribute_db"

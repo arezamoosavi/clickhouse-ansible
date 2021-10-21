@@ -1,4 +1,6 @@
 ---
+  - import_tasks: vars.yml
+    tags: [ch::vars]
   - import_tasks: install.yml
     tags: [ch::install]
   - import_tasks: config.yml

@@ -14,8 +14,8 @@
 
 - name: Config system
   template:
-    src: custom-config.xml.j2
-    dest: "{{ clickhouse_path_config_d }}/custom-config.xml"
+    src: config.xml.j2
+    dest: "{{ clickhouse_path_config }}/config.xml"
     owner: "{{ clickhouse_user }}"
     group: "{{ clickhouse_group }}"
     mode: 0644
@@ -25,16 +25,7 @@
 - name: Config users
   template:
     src: users.xml.j2
-    dest: /etc/clickhouse-server/users.d/users.xml
-    owner: "{{ clickhouse_user }}"
-    group: "{{ clickhouse_group }}"
-    mode: 0644
-  no_log: true
-
-- name: Config remote_servers
-  template:
-    src: remote-servers.xml.j2
-    dest: "{{ clickhouse_path_config_d }}/remote-servers.xml"
+    dest: "{{ clickhouse_path_config }}/users.xml"
     owner: "{{ clickhouse_user }}"
     group: "{{ clickhouse_group }}"
     mode: 0644
@@ -51,19 +42,19 @@
 
 - name: Config compression
   template:
-    src: compression.xml.j2
-    dest: "{{ clickhouse_path_config_d }}/compression.xml"
+    src: metrika.xml.j2
+    dest: "{{ clickhouse_path_config }}/metrika.xml"
     owner: "{{ clickhouse_user }}"
     group: "{{ clickhouse_group }}"
     mode: 0644
   notify: restart-ch
 
-- name: Config zookeeper
-  template:
-    src: zookeeper-servers.xml.j2
-    dest: "{{ clickhouse_path_config_d }}/zookeeper-servers.xml"
-    owner: "{{ clickhouse_user }}"
-    group: "{{ clickhouse_group }}"
-    mode: 0644
-  notify: restart-ch
-  when: groups['zookeeper'] is defined and (groups['zookeeper'] | length > 0)
+# - name: Config zookeeper
+#   template:
+#     src: zookeeper-servers.xml.j2
+#     dest: "{{ clickhouse_path_config_d }}/zookeeper-servers.xml"
+#     owner: "{{ clickhouse_user }}"
+#     group: "{{ clickhouse_group }}"
+#     mode: 0644
+#   notify: restart-ch
+#   when: groups['zookeeper'] is defined and (groups['zookeeper'] | length > 0)
