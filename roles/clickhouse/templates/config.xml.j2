@@ -14,36 +14,8 @@
     <tcp_port>{{ clickhouse_tcp_port }}</tcp_port>
 
     <!-- if enabled, configure ecryption settings https://altinity.com/blog/2019/3/5/clickhouse-networking-part-2 -->
-    <https_port>{{ clickhouse_https_port }}</https_port>
-    <tcp_port_secure>{{ clickhouse_tcp_secure_port }}</tcp_port_secure>
-
-    <!-- Used with https_port and tcp_port_secure. Full ssl options list: https://github.com/ClickHouse-Extras/poco/blob/master/NetSSL_OpenSSL/include/Poco/Net/SSLManager.h#L71 -->
-    <openSSL>
-        <server> <!-- Used for https server AND secure tcp port -->
-            <!-- openssl req -subj "/CN=localhost" -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout /etc/clickhouse-server/server.key -out /etc/clickhouse-server/server.crt -->
-            <certificateFile>/etc/clickhouse-server/server.crt</certificateFile>
-            <privateKeyFile>/etc/clickhouse-server/server.key</privateKeyFile>
-            <!-- openssl dhparam -out /etc/clickhouse-server/dhparam.pem 4096 -->
-            <dhParamsFile>/etc/clickhouse-server/dhparam.pem</dhParamsFile>
-            <verificationMode>none</verificationMode>
-            <loadDefaultCAFile>true</loadDefaultCAFile>
-            <cacheSessions>true</cacheSessions>
-            <disableProtocols>sslv2,sslv3</disableProtocols>
-            <preferServerCiphers>true</preferServerCiphers>
-        </server>
-
-        <client> <!-- Used for connecting to https dictionary source and secured Zookeeper communication -->
-            <loadDefaultCAFile>true</loadDefaultCAFile>
-            <cacheSessions>true</cacheSessions>
-            <disableProtocols>sslv2,sslv3</disableProtocols>
-            <preferServerCiphers>true</preferServerCiphers>
-            <!-- Use for self-signed: <verificationMode>none</verificationMode> -->
-            <invalidCertificateHandler>
-                <!-- Use for self-signed: <name>AcceptCertificateHandler</name> -->
-                <name>RejectCertificateHandler</name>
-            </invalidCertificateHandler>
-        </client>
-    </openSSL>
+    <!-- <https_port>{{ clickhouse_https_port }}</https_port> -->
+    <!-- <tcp_port_secure>{{ clickhouse_tcp_secure_port }}</tcp_port_secure> -->
 
     <interserver_http_port>{{ clickhouse_interserver_http }}</interserver_http_port>
     <interserver_http_host>{{ inventory_hostname }}</interserver_http_host>
@@ -91,22 +63,6 @@
 
     <!-- Replication parameters -->
     <remote_servers incl="clickhouse_remote_servers" />
-    {% for clusters_name, shards_name in clickhouse_clusters.items() | list %}
-        <{{ clusters_name }}>
-            {% for shard_name, replicas in shards_name.items() %}
-            <shard>
-                <internal_replication>true</internal_replication>
-                {% for replica in replicas %}
-                <replica>
-                    <host>{{ replica['host'] }}</host>
-                    <port>{{ clickhouse_tcp_port }}</port>
-                </replica>
-                {% endfor %}
-            </shard>
-            {% endfor %}
-        </{{ clusters_name }}>
-        {% endfor %}
-    </remote_servers>
     <remote_url_allow_hosts>
         <!-- Host should be specified exactly as in URL. The name is checked before DNS resolution.
             Example: "yandex.ru", "yandex.ru." and "www.yandex.ru" are different hosts.

@@ -11,7 +11,7 @@ clickhouse_service_status: "started"
 clickhouse_listen_host_default:
   - "{{ inventory_hostname }}"
   - "127.0.0.1"
-  - "::/0"
+  # - "0.0.0.0"
 
 # user/group
 clickhouse_group: "clickhouse"
@@ -110,11 +110,11 @@ clickhouse_users:
   - { user_name: "alireza",
       profile: "default",
       password: "alireza",
-      networks: ["::0"],
+      networks: ["::/1"],
       quota: "default" }
   - { user_name: "default",
       profile: "default",
-      networks: ["::0"],
+      networks: ["::/1"],
       quota: "default" }
 
 # ch logger
@@ -129,7 +129,7 @@ clickhouse_logger:
 clickhouse_clusters:
     cluster-01:
       shard01:
-        - { host: "10.0.3.102",}
-        - { host: "10.0.3.38",}
+        - { host: "10.0.3.105",}
+        - { host: "10.0.3.165",}
       shard02:
-        - { host: "10.0.3.143",}
+        - { host: "10.0.3.75",}

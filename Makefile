@@ -10,3 +10,8 @@ check-servers:
 
 pre-install:
 	ansible-playbook prepare_ansible_hosts.yml -i hosts
+
+logs-click:
+	tail -fn 100 /var/log/clickhouse-server/clickhouse-server.log
+	tail -fn 100 /var/log/clickhouse-server/clickhouse-server.err.log
+	
